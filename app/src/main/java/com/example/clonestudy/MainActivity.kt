@@ -25,14 +25,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // 로또번호 생성 버튼 누르면
+        // 로또번호 생성하기
+        // 생성된 로또번호로 이미지 변환하기
+        // 코루틴스코프(Dispatcher.IO) 통해 해당 회차 번호 가져오고
+        // 텍스트뷰에 뿌려주기~
         binding.generatebutton.setOnClickListener {
             val lottoNumbers = createLottoNumbers()
             Log.d("TAG", lottoNumbers.toString())
             updateLottoBallImage(lottoNumbers)
 
-            CoroutineScope(Dispatchers.IO+job ).launch {
+            CoroutineScope(Dispatchers.IO + job).launch {
                 val winningNumbers = async { getLottoNumbers() }
                 val rank = whatIsRank(lottoNumbers, winningNumbers.await())
+//                val text = "${winningNumbers.await()}"
                 val text = "${winningNumbers.await()} : $rank"
 
                 withContext(Dispatchers.Main) {
@@ -61,19 +67,6 @@ class MainActivity : AppCompatActivity() {
         }
         result.sort()
 
-        var evenNumberCount = 0
-        var oddNumberCount = 0
-        for (num in result) {
-            if (num % 2 == 0) {
-                evenNumberCount += 1
-            } else {
-                oddNumberCount += 1
-            }
-        }
-        result.add(result.sum())
-        result.add(oddNumberCount)
-        result.add(evenNumberCount)
-
         return result
     }
 
@@ -92,12 +85,11 @@ class MainActivity : AppCompatActivity() {
             ivGame3.setImageResource(getDrawableID(result[3]))
             ivGame4.setImageResource(getDrawableID(result[4]))
             ivGame5.setImageResource(getDrawableID(result[5]))
-            tvAnalyze.text = "번호합: ${result[6]}  홀:짝=${result[7]}:${result[8]}"
         }
     }
 
     private suspend fun getLottoNumbers(): ArrayList<Int> {
-        val round = "1010"
+        val round = "100"
         val url = "https://dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=$round"
         val lottoNumbers = ArrayList<Int>()
 
