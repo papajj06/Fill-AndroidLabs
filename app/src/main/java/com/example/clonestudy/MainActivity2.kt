@@ -22,6 +22,7 @@ class MainActivity2 : AppCompatActivity() {
 
         with(binding) {
             btnDownload.setOnClickListener {
+                //lifecycleScope
                 CoroutineScope(Dispatchers.Main).launch { // 코루틴의 메인 영역
                     progressBar.visibility = View.VISIBLE
                     val url = binding.etUrl.text.toString()
@@ -36,11 +37,12 @@ class MainActivity2 : AppCompatActivity() {
             }
         }
     }
-}
 
-suspend fun loadImage(imageUrl:String) : Bitmap {
-    val url = URL(imageUrl)
-    val stream = url.openStream()
 
-    return BitmapFactory.decodeStream(stream)
+    suspend fun loadImage(imageUrl: String): Bitmap {
+        val url = URL(imageUrl)
+        val stream = url.openStream()
+
+        return BitmapFactory.decodeStream(stream)
+    }
 }
